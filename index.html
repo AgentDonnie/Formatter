@@ -233,7 +233,7 @@ function implementFilters(){
 }
 
 function specialTags(){
-	if(!document.getElementById("mode").value == "mode_ahd"){
+	if(document.getElementById("mode").value == "mode_standard"){
 		for(let i = 0; i<srtline.length; i++){
 			for(let x = 0; x<srtline[i].dialogs.length; x++){
 				for(let j = 0; j<specials.length; j++){
@@ -248,7 +248,7 @@ function specialTags(){
 				}
 			}
 		}
-	}else{
+	}else if(document.getElementById("mode").value == "mode_ahd"){
 		for(let i = 0; i<srtline.length; i++){
 			for(let x = 0; x<srtline[i].dialogs.length; x++){
 				for(let j = 0; j<specials.length; j++){
