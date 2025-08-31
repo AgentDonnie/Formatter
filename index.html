@@ -233,35 +233,56 @@ function implementFilters(){
 }
 
 function specialTags(){
-	if(document.getElementById("mode").value == "mode_standard"){
-		for(let i = 0; i<srtline.length; i++){
-			for(let x = 0; x<srtline[i].dialogs.length; x++){
-				for(let j = 0; j<specials.length; j++){
-					
-					if (srtline[i].dialogs[x].includes(specials[j][0])){
-						srtline[i].dialogs[x] = srtline[i].dialogs[x].split(specials[j][0]).join(specials[j][1]);
+	switch(document.getElementById("mode").value){
+		case "mode_standard":
+			for(let i = 0; i<srtline.length; i++){
+				for(let x = 0; x<srtline[i].dialogs.length; x++){
+					for(let j = 0; j<specials.length; j++){
 						
-						srtline[i].note += "Tags Changed. ".trim();
-						srtline[i].isChanged = true;
-						
+						if (srtline[i].dialogs[x].includes(specials[j][0])){
+							srtline[i].dialogs[x] = srtline[i].dialogs[x].split(specials[j][0]).join(specials[j][1]);
+							
+							srtline[i].note += "Tags Changed. ".trim();
+							srtline[i].isChanged = true;
+							
+						}
 					}
 				}
 			}
-		}
-	}else if(document.getElementById("mode").value == "mode_ahd"){
-		for(let i = 0; i<srtline.length; i++){
-			for(let x = 0; x<srtline[i].dialogs.length; x++){
-				for(let j = 0; j<specials.length; j++){
-					
-					if (srtline[i].dialogs[x].includes(specials[j][1])){
-						srtline[i].dialogs[x] = srtline[i].dialogs[x].split(specials[j][1]).join(specials[j][0]);
+			break;
+		case "mode_ahd":
+			for(let i = 0; i<srtline.length; i++){
+				for(let x = 0; x<srtline[i].dialogs.length; x++){
+					for(let j = 0; j<specials.length; j++){
 						
-						srtline[i].note += "Tags Reverted. ".trim();
-						srtline[i].isChanged = true;
+						if (srtline[i].dialogs[x].includes(specials[j][1])){
+							srtline[i].dialogs[x] = srtline[i].dialogs[x].split(specials[j][1]).join(specials[j][0]);
+							
+							srtline[i].note += "Tags Reverted. ".trim();
+							srtline[i].isChanged = true;
+						}
 					}
 				}
 			}
-		}
+			break;
+		case "mode_grammar":
+			for(let i = 0; i<srtline.length; i++){
+				for(let j = 0; j<srtline[i].dialogs.length; j++){
+					srtline[i].oneliner+=srtline[i].dialogs[j].replace("\\n","")+" ";
+				}
+				var rep = srtline[i].oneliner.match(/\{(.*?)\}/);
+				if (rep!=null){
+					srtline[i].oneliner=srtline[i].oneliner.replace(rep[0],"");
+				}
+				
+				srtline[i].oneliner=srtline[i].oneliner.replace("<i>♪ ","");
+				srtline[i].oneliner=srtline[i].oneliner.replace(" ♪</i>","");
+				
+				srtline[i].note = srtline[i].oneliner.trim();
+				console.log(srtline[i].note);
+				srtline[i].isChanged = true;
+			}
+			break;
 	}
 }
 
@@ -378,7 +399,7 @@ function FixTrails(){
 
 function hasChanged(i){
 	for(let j = 0; j<srtline[i].original_dialogs.length; j++){
-		if(srtline[i].original_dialogs[j]!=srtline[i].dialogs[j]){
+		if( (srtline[i].original_dialogs[j]!=srtline[i].dialogs[j]) || srtline[i].note!=""){
 			return true;
 		}
 	}
@@ -480,6 +501,7 @@ class SRTLine {
     this.note = "";
 	this.original_dialogs = [];
     this.dialogs = [];
+	this.oneliner = "";
 	this.isChanged = false;
   }
 }
@@ -558,10 +580,9 @@ let openFile = function(event) {
 		
 		let newsrt = [];
 		if (document.getElementById("mode").value == "mode_grammar"){
-			var ln = "";
 			for(let i = 0; i<srtline.length; i++){
-				ln+=srtline[i].id+". ";
-				//newsrt.push( srtline[i].duration[0] +" --> "+ srtline[i].duration[1]);
+				srtline[i].oneliner = srtline[i].id+". "+srtline[i].oneliner;
+				/*//newsrt.push( srtline[i].duration[0] +" --> "+ srtline[i].duration[1]);
 				
 				var d = "";
 				for(let j = 0; j<srtline[i].dialogs.length; j++){
@@ -569,15 +590,14 @@ let openFile = function(event) {
 				}
 				var rep = d.match(/\{(.*?)\}/);
 				if (rep!=null){
-					console.log(rep[0])
 					d=d.replace(rep[0],"");
 				}
 				
 				d=d.replace("<i>♪ ","");
 				d=d.replace(" ♪</i>","");
 				
-				newsrt.push(ln.trim()+d.trim());
-				ln = "";
+				*/
+				newsrt.push(srtline[i].oneliner);
 			}
 		}else{
 			for(let i = 0; i<srtline.length; i++){
