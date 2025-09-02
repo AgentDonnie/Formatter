@@ -413,6 +413,7 @@ function displayTable(){
 	
 	for(let i = 0; i<srtline.length; i++){
 		
+		/*
 		if(document.getElementById("sel_lines").value=="line32"){
 			for(let j = 0; j<srtline[i].original_dialogs.length; j++){
 				if(srtline[i].original_dialogs[j].length > 32){
@@ -425,14 +426,13 @@ function displayTable(){
 					srtline[i].note += srtline[i].original_dialogs[j].length+" Lines."
 				}
 			}
-		}
+		}*/
 	
 	
 		let dialogs = "<font color=white>";
 		for(let j = 0; j<srtline[i].original_dialogs.length; j++){
 			dialogs += "<br>"+srtline[i].original_dialogs[j];
 		}
-		
 		
 		let dialogs2 = "<td>";
 		dialogs2+="<br>"
@@ -443,6 +443,7 @@ function displayTable(){
 		for(let j = 0; j<srtline[i].dialogs.length; j++){
 			dialogs2 += "<br>";
 		}
+		
 		dialogs2 +=""
 		dialogs2 +="<hr color=181818>"
 		dialogs2 +="</td>"
@@ -452,10 +453,16 @@ function displayTable(){
 			dialogs2+="<b><font color=lightgreen></font>"
 			dialogs2+="<br><font color=white></font>"
 			
-			dialogs2 += "<font color=green>"+srtline[i].note+"</font><font color=white>"
 			
-			for(let j = 0; j<srtline[i].dialogs.length; j++){
-				dialogs2 += "<br>"+srtline[i].dialogs[j];
+			
+			if(document.getElementById("mode").value!="mode_grammar"){
+				dialogs2 += "<font color=green>"+srtline[i].note+"</font><font color=white>"
+				for(let j = 0; j<srtline[i].dialogs.length; j++){
+					dialogs2 += "<br>"+srtline[i].dialogs[j];
+				}
+			}else{
+				dialogs2 += "<font color=white>"
+				dialogs2 += "<br>"+srtline[i].oneliner;
 			}
 			dialogs2 +=""
 			dialogs2 +="<hr color=181818>"
@@ -576,12 +583,12 @@ let openFile = function(event) {
 		
 		convertMusicNote();
 		//convertEmDash();
-		capitalHIs(document.getElementById("upperhi").checked);
+		//capitalHIs(document.getElementById("upperhi").checked);
 		
 		let newsrt = [];
 		if (document.getElementById("mode").value == "mode_grammar"){
 			for(let i = 0; i<srtline.length; i++){
-				srtline[i].oneliner = srtline[i].id+". "+srtline[i].oneliner;
+				srtline[i].oneliner = srtline[i].oneliner;
 				/*//newsrt.push( srtline[i].duration[0] +" --> "+ srtline[i].duration[1]);
 				
 				var d = "";
@@ -597,7 +604,7 @@ let openFile = function(event) {
 				d=d.replace(" ♪</i>","");
 				
 				*/
-				newsrt.push(srtline[i].oneliner);
+				newsrt.push(srtline[i].id+". "+srtline[i].oneliner);
 			}
 		}else{
 			for(let i = 0; i<srtline.length; i++){
@@ -632,15 +639,7 @@ function createDownloadLink(txt, name, type) {
 
 /*<input type="checkbox" id="EmDash" name="emdash" unchecked />
 			<label for="EmDash">Double Hypen To Em Dash <font color=#ff0000><b>(Don't use for SCC!)</b></font></label>
-			<br>*/
-
-</script>
-</head>
-
-<body bgcolor="222222"><font color=white>
-<div id="div_table">
-	<table id="tablemenu">
-		<div id="div_emdash">
+			<br>
 			<select id='sel_lines'>
 				<option value='line32'>Check 32 lines (SCC)</option>
 				<option value='line42'>Check 42 lines (SRT)</option>
@@ -653,9 +652,17 @@ function createDownloadLink(txt, name, type) {
 			<input type='radio' id='upperhi' name='special' unchecked />
 			<label for='upperhi'><b>Uppercase HIs<b></label>
 			<hr>
+			
+			*/
+
+</script>
+</head>
+
+<body bgcolor="222222"><font color=white>
+<div id="div_table">
+	<table id="tablemenu">
+		<div id="div_emdash">
 		
-			
-			
 			<label for="mode">Select Convertion Mode</label>
 			<br>
 			<select id='mode'>
