@@ -261,7 +261,7 @@ function specialTags(){
 				for(let x = 0; x<srtline[i].dialogs.length; x++){
 					for(let j = 0; j<specials.length; j++){
 						
-						if (srtline[i].dialogs[x].includes(specials[j][1]) && specials[j][0].trim()!="???"){
+						if (srtline[i].dialogs[x].includes(specials[j][1])){
 							srtline[i].dialogs[x] = srtline[i].dialogs[x].split(specials[j][1]).join(specials[j][0]);
 							
 							srtline[i].add_note("Tags Reverted.");
@@ -821,3 +821,4 @@ function createDownloadLink(txt, name, type){
 
 </font></body>
 </html>
+
