@@ -2,11 +2,9 @@
 <head>
 <meta charset="UTF-8">
 <script
-  src="https://code.jquery.com/jquery-3.7.1.js">
+src="https://code.jquery.com/jquery-3.7.1.js">
 </script>
 <script>
-let filename = "";
-
 let filters=[];
 let specials=[];
 let main_text=[];
@@ -28,7 +26,6 @@ addFilter("&gma", "Golden Mask Award");
 addFilter("&kod", "knocking on door");
 addFilter("&icg", "indistinct chattering");
 addFilter("&ic", "indistinct chatter");
-addFilter("&cc", "crowd cheering");
 
 //music
 addFilter("&umpg", "upbeat music playing");
@@ -182,300 +179,244 @@ addFilter(/christmas/i, "Christmas");
 addFilter(/valentines/i, "Valentines");
 
 function addSpecial(filter, change){
-	specials.push([filter, change]);
+specials.push([filter, change]);
 }
 
 function addFilter(filter, change){
-	filters.push([filter, change]);
+filters.push([filter, change]);
 }
 
 function setEmDash(b) {
-  document.getElementById("EmDash").checked = b;
+document.getElementById("EmDash").checked = b;
 }
 
 function capitalHIs(b){
-	for(let i = 0; i<main_text.length; i++){
-		let reg = /\[.*\]/
-		if (main_text[i].match(reg)){
-			
-			let val = main_text[i].match(reg);
-			
-			for(let j = 0; j<val.length; j++){
-				val[j] = val[j].toLowerCase();
-				//console.log(b);
-				if(b){
-					val[j] = val[j].toUpperCase();
-				}
-			}
-			
-			main_text[i] = main_text[i].replace(main_text[i].match(reg),val);
-		}
-	}
+for(let i = 0; i<main_text.length; i++){
+let reg = /\[.*\]/
+if (main_text[i].match(reg)){
+
+let val = main_text[i].match(reg);
+
+for(let j = 0; j<val.length; j++){
+val[j] = val[j].toLowerCase();
+//console.log(b);
+if(b){
+val[j] = val[j].toUpperCase();
+}
+}
+
+main_text[i] = main_text[i].replace(main_text[i].match(reg),val);
+}
+}
 }
 
 function implementFilters(){
-	//remove special charters
-	//for(let i = 0; i<main_text.length; i++){
-	//	for(let j = 0; j<filters.length; j++){
-	//		main_text[i] = main_text[i].split(filters[j][0]).join(filters[j][1]);
-	//	}
-	//}
-	
-	
-	for(let i = 0; i<srtline.length; i++){
-		for(let x = 0; x<srtline[i].dialogs.length; x++){
-			for(let j = 0; j<filters.length; j++){
-				
-				if (srtline[i].dialogs[x].match(filters[j][0])){
-					srtline[i].dialogs[x] = srtline[i].dialogs[x].split(filters[j][0]).join(filters[j][1]);
-					
-					srtline[i].isChanged = true;
-					
-				}
-			}
-		}
-	}
-	
+//remove special charters
+//for(let i = 0; i<main_text.length; i++){
+//	for(let j = 0; j<filters.length; j++){
+//		main_text[i] = main_text[i].split(filters[j][0]).join(filters[j][1]);
+//	}
+//}
+
+
+for(let i = 0; i<srtline.length; i++){
+for(let x = 0; x<srtline[i].dialogs.length; x++){
+for(let j = 0; j<filters.length; j++){
+
+if (srtline[i].dialogs[x].match(filters[j][0])){
+srtline[i].dialogs[x] = srtline[i].dialogs[x].split(filters[j][0]).join(filters[j][1]);
+
+srtline[i].isChanged = true;
+
+}
+}
+}
+}
+
 }
 
 function specialTags(){
-	switch(document.getElementById("mode").value){
-		case "mode_standard":
-			for(let i = 0; i<srtline.length; i++){
-				for(let x = 0; x<srtline[i].dialogs.length; x++){
-					for(let j = 0; j<specials.length; j++){
-						
-						if (srtline[i].dialogs[x].includes(specials[j][0])){
-							srtline[i].dialogs[x] = srtline[i].dialogs[x].split(specials[j][0]).join(specials[j][1]);
-							
-							srtline[i].note += "Tags Changed. ".trim();
-							srtline[i].isChanged = true;
-							
-						}
-					}
-				}
-			}
-			break;
-		case "mode_ahd":
-			for(let i = 0; i<srtline.length; i++){
-				for(let x = 0; x<srtline[i].dialogs.length; x++){
-					for(let j = 0; j<specials.length; j++){
-						
-						if (srtline[i].dialogs[x].includes(specials[j][1])){
-							srtline[i].dialogs[x] = srtline[i].dialogs[x].split(specials[j][1]).join(specials[j][0]);
-							
-							srtline[i].note += "Tags Reverted. ".trim();
-							srtline[i].isChanged = true;
-						}
-					}
-				}
-			}
-			break;
-		case "mode_grammar":
-			for(let i = 0; i<srtline.length; i++){
-				for(let j = 0; j<srtline[i].dialogs.length; j++){
-					srtline[i].oneliner+=srtline[i].dialogs[j].replace("\\n","")+" ";
-				}
-				var rep = srtline[i].oneliner.match(/\{(.*?)\}/);
-				if (rep!=null){
-					srtline[i].oneliner=srtline[i].oneliner.replace(rep[0],"");
-				}
-				
-				srtline[i].oneliner=srtline[i].oneliner.replace("<i>♪ ","");
-				srtline[i].oneliner=srtline[i].oneliner.replace(" ♪</i>","");
-				
-				srtline[i].note = srtline[i].oneliner.trim();
-				console.log(srtline[i].note);
-				srtline[i].isChanged = true;
-			}
-			break;
-	}
+switch(document.getElementById("mode").value){
+case "mode_standard":
+for(let i = 0; i<srtline.length; i++){
+for(let x = 0; x<srtline[i].dialogs.length; x++){
+for(let j = 0; j<specials.length; j++){
+
+if (srtline[i].dialogs[x].includes(specials[j][0])){
+srtline[i].dialogs[x] = srtline[i].dialogs[x].split(specials[j][0]).join(specials[j][1]);
+
+srtline[i].note += "Tags Changed. ".trim();
+srtline[i].isChanged = true;
+
+}
+}
+}
+}
+break;
+case "mode_ahd":
+for(let i = 0; i<srtline.length; i++){
+for(let x = 0; x<srtline[i].dialogs.length; x++){
+for(let j = 0; j<specials.length; j++){
+
+if (srtline[i].dialogs[x].includes(specials[j][1])){
+srtline[i].dialogs[x] = srtline[i].dialogs[x].split(specials[j][1]).join(specials[j][0]);
+
+srtline[i].note += "Tags Reverted. ".trim();
+srtline[i].isChanged = true;
+}
+}
+}
+}
+break;
+case "mode_grammar":
+for(let i = 0; i<srtline.length; i++){
+for(let j = 0; j<srtline[i].dialogs.length; j++){
+srtline[i].oneliner+=srtline[i].dialogs[j].replace("\\n","")+" ";
+}
+var rep = srtline[i].oneliner.match(/\{(.*?)\}/);
+if (rep!=null){
+srtline[i].oneliner=srtline[i].oneliner.replace(rep[0],"");
+}
+
+srtline[i].oneliner=srtline[i].oneliner.replace("<i>♪ ","");
+srtline[i].oneliner=srtline[i].oneliner.replace(" ♪</i>","");
+
+srtline[i].note = srtline[i].oneliner.trim();
+console.log(srtline[i].note);
+srtline[i].isChanged = true;
+}
+break;
+}
 }
 
 function CapAftrerChar(s, val){
-	let idx = s.indexOf(val);
+let idx = s.indexOf(val);
 
-	if(idx!=-1){
-		idx = idx + val.length;
-		if(idx<s.length){
-			let got=s.split("");
-			got[idx] = got[idx].toUpperCase();
-			return got.join("");
-		}
-	}
-	return s;
+if(idx!=-1){
+idx = idx + val.length;
+if(idx<s.length){
+let got=s.split("");
+got[idx] = got[idx].toUpperCase();
+return got.join("");
+}
+}
+return s;
 }
 
 function CapHitFirstChar(s, bool){
-	let got=s.split("");
-	for(let i=0; i<s.length; i++){
-		if(got[i].match(/[a-z]/i)){
-			if(bool == true){
-				got[i] = got[i].toUpperCase();
-			} else if(bool == false){
-				got[i] = got[i].toLowerCase();
-			}
-			return got.join("");
-		}
-	}
-	return s;
+let got=s.split("");
+for(let i=0; i<s.length; i++){
+if(got[i].match(/[a-z]/i)){
+if(bool == true){
+got[i] = got[i].toUpperCase();
+} else if(bool == false){
+got[i] = got[i].toLowerCase();
 }
-		
+return got.join("");
+}
+}
+return s;
+}
+
 function EnsureCapitalization(){
-	for(let i = 0; i<main_text.length; i++){
-		//main_text[i]=main_text[i].toLowerCase(); // use only for all caps translations
-		// fix unahan and trailing spaces
-		main_text[i]=main_text[i].replace(/^[ \t]+/igm,"");
-	}
-	
-	let re = /(^|[.!?]\s+)([a-z])/g;
-	for(let i = 0; i<main_text.length; i++){
-		// capitalized after period, exclam and question mark.
-		main_text[i] = main_text[i].replace(re, function (m, $1, $2) {
-			return $1 + $2.toUpperCase();
-		});
-		main_text[i]=CapHitFirstChar(main_text[i], true); // capitalize small first
-	}
-	
-	let reg = /,$/igm;
-	for(let i = 0; i<main_text.length; i++){
-		//When all first char is capitalize, respect comma.
-		if(reg.test(main_text[i]) || main_text[i].substring(main_text[i].length-2,main_text[i].length-1) == ","){
-			main_text[i+1]=CapHitFirstChar(main_text[i+1], false);
-			//alert(main_text[i+1]);
-		}
-	}
-	
-	for(let i = 0; i<main_text.length; i++){
-		// kapag nasa loob ng quote, capitalize.
-		main_text[i] = CapAftrerChar(main_text[i], "''");
-		main_text[i] = CapAftrerChar(main_text[i], "\"");
-	}
+for(let i = 0; i<main_text.length; i++){
+//main_text[i]=main_text[i].toLowerCase(); // use only for all caps translations
+// fix unahan and trailing spaces
+main_text[i]=main_text[i].replace(/^[ \t]+/igm,"");
+}
+
+let re = /(^|[.!?]\s+)([a-z])/g;
+for(let i = 0; i<main_text.length; i++){
+// capitalized after period, exclam and question mark.
+main_text[i] = main_text[i].replace(re, function (m, $1, $2) {
+return $1 + $2.toUpperCase();
+});
+main_text[i]=CapHitFirstChar(main_text[i], true); // capitalize small first
+}
+
+let reg = /,$/igm;
+for(let i = 0; i<main_text.length; i++){
+//When all first char is capitalize, respect comma.
+if(reg.test(main_text[i]) || main_text[i].substring(main_text[i].length-2,main_text[i].length-1) == ","){
+main_text[i+1]=CapHitFirstChar(main_text[i+1], false);
+//alert(main_text[i+1]);
+}
+}
+
+for(let i = 0; i<main_text.length; i++){
+// kapag nasa loob ng quote, capitalize.
+main_text[i] = CapAftrerChar(main_text[i], "''");
+main_text[i] = CapAftrerChar(main_text[i], "\"");
+}
 }
 
 function convertMusicNote(){
-	for(let i = 0; i<main_text.length; i++){
-		if(main_text[i].includes("(dd)")){
-			main_text[i] = main_text[i].replace("(dd)", "<i>♪ ") + " ♪</i>";
-			mainold_text[i] = main_text[i];
-		}
-	}
-	
-	//mainold_text = main_text;
+for(let i = 0; i<main_text.length; i++){
+if(main_text[i].includes("(dd)")){
+main_text[i] = main_text[i].replace("(dd)", "<i>♪ ") + " ♪</i>";
+mainold_text[i] = main_text[i];
+}
+}
+
+//mainold_text = main_text;
 }
 
 function convertEmDash(){
-	if(!document.getElementById("revert_specials").checked){
-		if (document.getElementById("EmDash").checked){
-			for(let i = 0; i<main_text.length; i++){
-				if(main_text[i].includes("--") && !main_text[i].includes("-->")){
-					main_text[i] = main_text[i].replace(" --", "--"); // remove space
-					main_text[i] = main_text[i].replace("-- ", "--"); // remove space
-					main_text[i] = main_text[i].replace("--", "—");
-					mainold_text[i] = main_text[i];
-				}
-			}
-		}
-	}else{
-		for(let i = 0; i<main_text.length; i++){
-			main_text[i] = main_text[i].replace("—", "--"); // remove space
-			mainold_text[i] = main_text[i];
-		}
-	}
+if(!document.getElementById("revert_specials").checked){
+if (document.getElementById("EmDash").checked){
+for(let i = 0; i<main_text.length; i++){
+if(main_text[i].includes("--") && !main_text[i].includes("-->")){
+main_text[i] = main_text[i].replace(" --", "--"); // remove space
+main_text[i] = main_text[i].replace("-- ", "--"); // remove space
+main_text[i] = main_text[i].replace("--", "—");
+mainold_text[i] = main_text[i];
+}
+}
+}
+}else{
+for(let i = 0; i<main_text.length; i++){
+main_text[i] = main_text[i].replace("—", "--"); // remove space
+mainold_text[i] = main_text[i];
+}
+}
 }
 
 function InitialFix(){
-	for(let i = 0; i<main_text.length; i++){
-		main_text[i] = main_text[i].replace(/  +/g, " "); //fix multi spaces
-		mainold_text[i] = main_text[i];
-	}
-	
-	//mainold_text = main_text;
+for(let i = 0; i<main_text.length; i++){
+main_text[i] = main_text[i].replace(/  +/g, " "); //fix multi spaces
+mainold_text[i] = main_text[i];
+}
+
+//mainold_text = main_text;
 }
 
 function FixTrails(){
-	for(let i = 0; i<main_text.length; i++){
-		main_text[i] = main_text[i].replace(/!!+/g, "!");
-		main_text[i] = main_text[i].replace(/[?]+/g, "?");
-		main_text[i] = main_text[i].replace(/[,]+/g, ",");
-		//main_text[i] = main_text[i].replace(/[\[]+/g, "[");
-		//main_text[i] = main_text[i].replace(/[\]]+/g, "]");
-	}
+for(let i = 0; i<main_text.length; i++){
+main_text[i] = main_text[i].replace(/!!+/g, "!");
+main_text[i] = main_text[i].replace(/[?]+/g, "?");
+main_text[i] = main_text[i].replace(/[,]+/g, ",");
+//main_text[i] = main_text[i].replace(/[\[]+/g, "[");
+//main_text[i] = main_text[i].replace(/[\]]+/g, "]");
+}
 }
 
 function hasChanged(i){
-	for(let j = 0; j<srtline[i].original_dialogs.length; j++){
-		if( (srtline[i].original_dialogs[j]!=srtline[i].dialogs[j]) || srtline[i].note!=""){
-			return true;
-		}
-	}
-	
-	return false;
+for(let j = 0; j<srtline[i].original_dialogs.length; j++){
+if( (srtline[i].original_dialogs[j]!=srtline[i].dialogs[j]) || srtline[i].note!=""){
+return true;
+}
+}
+
+return false;
 }
 
 function displayTable(){
-	// display sa table
-	//$("#table").append(row);
-	
-	for(let i = 0; i<srtline.length; i++){
-		let dialogs = "<font color=white>";
-		
-		for(let j = 0; j<srtline[i].original_dialogs.length; j++){
-			dialogs += srtline[i].original_dialogs[j]+"<br>\n";
-		}
-		
-		if(i<srtline.length-1)
-			dialogs += "<br>\n</font>"
-		
-		var row = $("<b><font color=lightgreen>" +srtline[i].id +"</b></font><br>\n"
-		+"<font color=gold>" +srtline[i].duration[0] +" --> " +srtline[i].duration[1]+"</font><br>\n"
-		+dialogs);
-		$("#table").append(row);
-		//$("#table").focus();
-	}
-	
-	$("#input").remove();
-	//refreshDownload();
-}
+// display sa table
+//$("#table").append(row);
 
-function displayTableRef(){
-	// display sa table
-	//$("#table").append(row);
-	
-	for(let i = 0; i<srtline.length; i++){
-		let dialogs = "<font color=white>";
-		for(let j = 0; j<srtline[i].original_dialogs.length; j++){
-			if(j==0)
-				dialogs += srtline[i].oneliner+"<br>\n";
-			else
-				dialogs += "<br>\n";
-		}
-		
-		if(i<srtline.length-1)
-			dialogs += "<br>\n</font>"
-		
-		var row = $("<br>\n"
-		+"<br>\n"
-		+dialogs);
-		$("#table2").append(row);
-		//$("#table").focus();
-	}
-}
+for(let i = 0; i<srtline.length; i++){
 
-function refreshDownload(){
-	let table = document.getElementById('table');
-	
-	var for_download_txt = table.textContent.trim();
-	createDownloadLink(for_download_txt, filename, 'text/plain');
-}
-
-function displayTable2(){
-	// display sa table
-	//$("#table").append(row);
-	
-	for(let i = 0; i<srtline.length; i++){
-		
-		/*
+/*
 		if(document.getElementById("sel_lines").value=="line32"){
 			for(let j = 0; j<srtline[i].original_dialogs.length; j++){
 				if(srtline[i].original_dialogs[j].length > 32){
@@ -489,61 +430,61 @@ function displayTable2(){
 				}
 			}
 		}*/
-	
-	
-		let dialogs = "<font color=white>";
-		for(let j = 0; j<srtline[i].original_dialogs.length; j++){
-			dialogs += "<br>"+srtline[i].original_dialogs[j];
-		}
-		
-		let dialogs2 = "<td>";
-		dialogs2+="<br>"
-		dialogs2+="<br>"
-		
-		dialogs2 += "<font color=white>"
-		
-		for(let j = 0; j<srtline[i].dialogs.length; j++){
-			dialogs2 += "<br>";
-		}
-		
-		dialogs2 +=""
-		dialogs2 +="<hr color=181818>"
-		dialogs2 +="</td>"
-		
-		if (hasChanged(i)){
-			dialogs2 = "<td>"
-			dialogs2+="<b><font color=lightgreen></font>"
-			dialogs2+="<br><font color=white></font>"
-			
-			
-			
-			if(document.getElementById("mode").value!="mode_grammar"){
-				dialogs2 += "<font color=green>"+srtline[i].note+"</font><font color=white>"
-				for(let j = 0; j<srtline[i].dialogs.length; j++){
-					dialogs2 += "<br>"+srtline[i].dialogs[j];
-				}
-			}else{
-				dialogs2 += "<font color=white>"
-				dialogs2 += "<br>"+srtline[i].oneliner;
-			}
-			dialogs2 +=""
-			dialogs2 +="<hr color=181818>"
-			dialogs2 +="</td>"
-		}
-		
-		var row = $("<tr><td><b><font color=lightgreen>" +srtline[i].id +"</b></font>"
-		+"<br><font color=gold>" +srtline[i].duration[0] +" → " +srtline[i].duration[1]+"</font>"
-		+dialogs
-		+"<hr color=181818>"
-		+"</td>"
-		
-		+dialogs2
-		+"</tr>");
-		$("#table").append(row);
-		$("#table").focus();
-	}
-	
-	/*
+
+
+let dialogs = "<font color=white>";
+for(let j = 0; j<srtline[i].original_dialogs.length; j++){
+dialogs += "<br>"+srtline[i].original_dialogs[j];
+}
+
+let dialogs2 = "<td>";
+dialogs2+="<br>"
+dialogs2+="<br>"
+
+dialogs2 += "<font color=white>"
+
+for(let j = 0; j<srtline[i].dialogs.length; j++){
+dialogs2 += "<br>";
+}
+
+dialogs2 +=""
+dialogs2 +="<hr color=181818>"
+dialogs2 +="</td>"
+
+if (hasChanged(i)){
+dialogs2 = "<td>"
+dialogs2+="<b><font color=lightgreen></font>"
+dialogs2+="<br><font color=white></font>"
+
+
+
+if(document.getElementById("mode").value!="mode_grammar"){
+dialogs2 += "<font color=green>"+srtline[i].note+"</font><font color=white>"
+for(let j = 0; j<srtline[i].dialogs.length; j++){
+dialogs2 += "<br>"+srtline[i].dialogs[j];
+}
+}else{
+dialogs2 += "<font color=white>"
+dialogs2 += "<br>"+srtline[i].oneliner;
+}
+dialogs2 +=""
+dialogs2 +="<hr color=181818>"
+dialogs2 +="</td>"
+}
+
+var row = $("<tr><td><b><font color=lightgreen>" +srtline[i].id +"</b></font>"
++"<br><font color=gold>" +srtline[i].duration[0] +" → " +srtline[i].duration[1]+"</font>"
++dialogs
++"<hr color=181818>"
++"</td>"
+
++dialogs2
++"</tr>");
+$("#table").append(row);
+$("#table").focus();
+}
+
+/*
 	for(let i = 0; i<main_text.length; i++){
 		
 		if(document.getElementById("linelimit32").checked == true && mainold_text[i].length > 33){
@@ -564,72 +505,68 @@ function displayTable2(){
 }
 
 class SRTLine {
-  constructor() {
-	this.id = 0; //so it won't start with 0
-    this.duration = "";
-    this.note = "";
-	this.original_dialogs = [];
-    this.dialogs = [];
-	this.oneliner = "";
-	this.isChanged = false;
-  }
+constructor() {
+this.id = 0; //so it won't start with 0
+this.duration = "";
+this.note = "";
+this.original_dialogs = [];
+this.dialogs = [];
+this.oneliner = "";
+this.isChanged = false;
+}
 }
 
 let openFile = function(event) {
-	let input = event.target;
-	let reader = new FileReader();
-	reader.readAsText(input.files[0]);
-	filename = input.files[0].name.replace(input.files[0].name.substr(input.files[0].name.length-4),"");
-	
-	switch(document.getElementById("mode").value){
-		case "mode_standard":
-			filename += "_CLEAN.srt";
-			break;
-		case "mode_ahd":
-			filename += "_FOR_AHD.srt";
-			break;
-		case "mode_grammar":
-			filename += "_FOR_GRAMMAR.srt";
-			break;
-	}
-	
-	reader.onload = function(){
-		let text = reader.result.trim();
-		main_text = text.split("\n");
-		
-		let i=0;
-		let id=1;
-		while(i<main_text.length){
-			if (main_text[i].trim()!=""){
-				let sub = new SRTLine();
-				srtline.push(sub);
-				sub.id = id; //main_text[i];
-				id+=1;
-				
-				i++;
-				if(i<main_text.length){
-					sub.duration = main_text[i].split(" --> ");
-					
-					for(let j = 0; j<sub.duration.length; j++)
-						sub.duration[j]=sub.duration[j].trim();
-					
-				}
-				
-				i++;
-				while(i<main_text.length){
-					if(main_text[i].trim()!=""){ 
-						sub.original_dialogs.push(main_text[i].trim());
-						sub.dialogs.push(main_text[i].trim());
-					}else{
-						break;
-					}
-					i++;
-				}	
-			}
-			i++;
-		}
-		
-		/*
+let input = event.target;
+let reader = new FileReader();
+reader.readAsText(input.files[0]);
+let filename = input.files[0].name.replace(input.files[0].name.substr(input.files[0].name.length-4),"");
+
+switch(document.getElementById("mode").value){
+case "mode_standard":
+filename += "_CLEAN.srt";
+break;
+case "mode_ahd":
+filename += "_FOR_AHD.srt";
+break;
+case "mode_grammar":
+filename += "_FOR_GRAMMAR.srt";
+break;
+}
+
+reader.onload = function(){
+let text = reader.result.trim();
+main_text = text.split("\n");
+
+let i=0;
+let id=1;
+while(i<main_text.length){
+if (main_text[i].trim()!=""){
+let sub = new SRTLine();
+srtline.push(sub);
+sub.id = id; //main_text[i];
+id+=1;
+
+i++;
+if(i<main_text.length){
+sub.duration = main_text[i].split(" --> ");
+}
+
+i++;
+while(i<main_text.length){
+if(main_text[i].trim()!=""){ 
+sub.original_dialogs.push(main_text[i].trim());
+sub.dialogs.push(main_text[i].trim());
+}else{
+break;
+}
+i++;
+}	
+}
+i++;
+}
+
+/*
 		for(let i = 0; i<srtline.length; i++){
 			console.log( srtline[i].id );
 			console.log( srtline[i].duration[0] +" --> "+ srtline[i].duration[1]);
@@ -639,23 +576,23 @@ let openFile = function(event) {
 			}
 			
 		}*/
-		
-		InitialFix();
-		
-		// EnsureCapitalization();
-		FixTrails();
-		implementFilters();
-		specialTags();
-		
-		convertMusicNote();
-		//convertEmDash();
-		//capitalHIs(document.getElementById("upperhi").checked);
-		
-		let newsrt = [];
-		if (document.getElementById("mode").value == "mode_grammar"){
-			for(let i = 0; i<srtline.length; i++){
-				srtline[i].oneliner = srtline[i].oneliner;
-				/*//newsrt.push( srtline[i].duration[0] +" --> "+ srtline[i].duration[1]);
+
+InitialFix();
+
+// EnsureCapitalization();
+FixTrails();
+implementFilters();
+specialTags();
+
+convertMusicNote();
+//convertEmDash();
+//capitalHIs(document.getElementById("upperhi").checked);
+
+let newsrt = [];
+if (document.getElementById("mode").value == "mode_grammar"){
+for(let i = 0; i<srtline.length; i++){
+srtline[i].oneliner = srtline[i].oneliner;
+/*//newsrt.push( srtline[i].duration[0] +" --> "+ srtline[i].duration[1]);
 				
 				var d = "";
 				for(let j = 0; j<srtline[i].dialogs.length; j++){
@@ -670,35 +607,37 @@ let openFile = function(event) {
 				d=d.replace(" ♪</i>","");
 				
 				*/
-				newsrt.push(srtline[i].id+". "+srtline[i].oneliner);
-			}
-		}else{
-			for(let i = 0; i<srtline.length; i++){
-				newsrt.push( srtline[i].id );
-				newsrt.push( srtline[i].duration[0] +" --> "+ srtline[i].duration[1]);
-				
-				for(let j = 0; j<srtline[i].dialogs.length; j++){
-					newsrt.push( srtline[i].dialogs[j] );
-				}
-				newsrt.push("");
-				
-			}
-		}
-		
-		displayTable();
-		displayTableRef();
-		
-		let gfg_down = document.getElementById("div_emdash");
-		gfg_down.parentNode.removeChild(gfg_down);
-	};
+newsrt.push(srtline[i].id+". "+srtline[i].oneliner);
+}
+}else{
+for(let i = 0; i<srtline.length; i++){
+newsrt.push( srtline[i].id );
+newsrt.push( srtline[i].duration[0] +" --> "+ srtline[i].duration[1]);
+
+for(let j = 0; j<srtline[i].dialogs.length; j++){
+newsrt.push( srtline[i].dialogs[j] );
+}
+newsrt.push("");
+
+}
+}
+
+displayTable();
+
+createDownloadLink(newsrt.join("\n"), filename, 'text/plain');
+
+let gfg_down = document.getElementById("div_emdash");
+gfg_down.parentNode.removeChild(gfg_down);
+};
 };
 
 function createDownloadLink(txt, name, type) {
-	var file = new Blob([txt], {type: type});
-	let link = $("<a>");
-	link.attr("id","a").text("Download "+name+" here");
-	$("#div_link").append(link);
-	$("#a").attr("href", URL.createObjectURL(file)).attr("download", name);
+var file = new Blob([txt], {type: type});
+$("#input").remove();
+let link = $("<a>");
+link.attr("id","a").text("Download "+name+" here");
+$("#div_link").append(link);
+$("#a").attr("href", URL.createObjectURL(file)).attr("download", name);
 }
 
 /*<input type="checkbox" id="EmDash" name="emdash" unchecked />
@@ -724,36 +663,26 @@ function createDownloadLink(txt, name, type) {
 
 <body bgcolor="222222"><font color=white>
 <div id="div_table">
-	<table id="tablemenu">
-		<div id="div_emdash">
-		
-			<label for="mode">Select Convertion Mode</label>
-			<br>
-			<select id='mode'>
-				<option value='mode_standard'>Standard Clean</option>
-				<option value='mode_ahd'>AHD Format</option>
-				<option value='mode_grammar'>For Grammar Checking</option>
-			</select>
+<table id="tablemenu">
+<div id="div_emdash">
 
-		</div>
-	</table>
-	
-	<table>
-	<tr>
-	<td>
-	<pre><table id="table" border=0 width=400 class="blueTable" contenteditable=true>
-		
-	</table></pre>
-	</td>
-	<td>
-	<pre><table id="table2" border=0 width=800 class="blueTable" contenteditable=true>
-		
-	</table></pre>
-	</td>
-	</tr>
+<label for="mode">Select Convertion Mode</label>
+<br>
+<select id='mode'>
+<option value='mode_standard'>Standard Clean</option>
+<option value='mode_ahd'>AHD Format</option>
+<option value='mode_grammar'>For Grammar Checking</option>
+</select>
+
+</div>
+</table>
+
+<pre><table id="table" border=0 width=700 class="blueTable" contenteditable=true>
+<col width=400><col width=500 height=20><col width=100>
+</table></pre>
 </div>
 <div id="div_link">
-	</span><input id="input" type="file" accept=".srt" onchange="openFile(event)"><br>
+</span><input id="input" type="file" accept=".srt" onchange="openFile(event)"><br>
 </div>
 <br>
 
