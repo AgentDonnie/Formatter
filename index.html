@@ -5,10 +5,38 @@
   src="https://code.jquery.com/jquery-3.7.1.js">
 </script>
 <script>
-let filename = "";
 
+class SpecialFilter {
+	constructor(fil, rep, comment) {
+		this.filter=[];
+		this.filter.push(fil);
+		this.filter.push(rep);
+		this.note = comment;
+		specialfilter.push(this);
+	}
+}
+
+class SRTLine {
+	constructor() {
+		this.id = 0; //so it won't start with 0
+		this.duration = "";
+		this.note = "";
+		this.original_dialogs = [];
+		this.dialogs = [];
+		this.oneliner = "";
+		this.isChanged = false;
+	}
+  
+	add_note(txt){
+		if(!this.note.includes(txt))
+			this.note+=txt+" ".trim();
+	}
+}
+
+let filename = "";
 let filters=[];
 let specials=[];
+let specialfilter=[];
 let main_text=[];
 let mainold_text=[];
 const srtline = [];
@@ -42,13 +70,17 @@ addFilter("&lg", "laughing");
 addFilter("&l", "laugh");
 
 //Special Tags
+new SpecialFilter("&ddd","♪♪♪","Music Tag");
+new SpecialFilter("[[","<i>♪ ","OP Music Tag");
+new SpecialFilter("]]"," ♪<\/i>","CL Music Tag");
+
 addSpecial("&ddd", "♪♪♪");
-addSpecial("[[", "<i>♪ ");
-addSpecial("]]", " ♪<\/i>");
-addSpecial("[[", "♪ ");
-addSpecial("]]", " ♪");
+//addSpecial("[[", "<i>♪ ");
+//addSpecial("]]", " ♪<\/i>");
 addSpecial("??? ", "[[");
 addSpecial(" ???", "]]");
+addSpecial("[[", "♪ ");
+addSpecial("]]", " ♪");
 
 addSpecial("(TL)", "{\\an7}");
 addSpecial("(TC)", "{\\an8}");
@@ -221,7 +253,6 @@ function implementFilters(){
 	//	}
 	//}
 	
-	
 	for(let i = 0; i<srtline.length; i++){
 		for(let x = 0; x<srtline[i].dialogs.length; x++){
 			for(let j = 0; j<filters.length; j++){
@@ -261,7 +292,7 @@ function specialTags(){
 				for(let x = 0; x<srtline[i].dialogs.length; x++){
 					for(let j = 0; j<specials.length; j++){
 						
-						if (srtline[i].dialogs[x].includes(specials[j][1])){
+						if (srtline[i].dialogs[x].includes(specials[j][1]) && specials[j][0].trim() != "???"){
 							srtline[i].dialogs[x] = srtline[i].dialogs[x].split(specials[j][1]).join(specials[j][0]);
 							
 							srtline[i].add_note("Tags Reverted.");
@@ -606,23 +637,6 @@ function displayTable2(){
 	}*/
 }
 
-class SRTLine {
-	constructor() {
-		this.id = 0; //so it won't start with 0
-		this.duration = "";
-		this.note = "";
-		this.original_dialogs = [];
-		this.dialogs = [];
-		this.oneliner = "";
-		this.isChanged = false;
-	}
-  
-	add_note(txt){
-		if(!this.note.includes(txt))
-			this.note+=txt+" ".trim();
-	}
-}
-
 let openFile = function(event) {
 	let input = event.target;
 	let reader = new FileReader();
@@ -821,4 +835,3 @@ function createDownloadLink(txt, name, type){
 
 </font></body>
 </html>
-
